@@ -9,8 +9,9 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import React, { useEffect } from 'react';
-import BlankCard from '../../../../../../../../Software Key Gen Admin/Software Key Gen Admin 1/src/app/(DashboardLayout)/managers/[managerId]/(components)/BlankCard'
+// import BlankCard from '../../../../../../../../Software Key Gen Admin/Software Key Gen Admin 1/src/app/(DashboardLayout)/managers/[managerId]/(components)/BlankCard'
 import { IconFileBroken, IconKey, IconMapPin, IconSearch } from '@tabler/icons-react';
+import BlankCard from './BlankCard';
 
 const TransactionCard = ({ transactions }) => {
     // const dispatch = useDispatch();
