@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  name      String
+  username  String
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model Software {
+  id        String            @id @default(cuid())
+  name      String
+  createdAt DateTime          @default(now())
+  versions  SoftwareVersion[]
+}
+
+model SoftwareVersion {
+  id                 String               @id @default(cuid())
+  name               String
+  parId              String
+  downloadLink       String
+  tokenRate          Int                  @default(1)
+  createdAt          DateTime             @default(now())
+  dealerTransactions DealerTransactions[]
+  software           Software             @relation(fields: [parId], references: [id])
+  isUpdate           Boolean              @default(false)
+}
+
+model MangerToDealerTransactions {
+  id        String   @id @default(cuid())
+  dealerId  String
+  managerId String
+  token     Int
+  createdAt DateTime @default(now())
+  dealer    Dealer   @relation(fields: [dealerId], references: [id])
+  manager   Manager  @relation(fields: [managerId], references: [id])
+}
+
+model Manager {
+  id                          String                       @id @default(cuid())
+  name                        String
+  mob                         String
+  username                    String
+  password                    String
+  tokens                      Int
+  createdAt                   DateTime                     @default(now())
+  isActive                    Boolean                      @default(true)
+  dealers                     Dealer[]
+  managerTransactions         ManagerTransactions[]
+  managerToDealerTransactions MangerToDealerTransactions[]
+}
+
+model ManagerTransactions {
+  id            String   @id @default(cuid())
+  managerId     String
+  token         Int
+  createdAt     DateTime @default(now())
+  paymentStatus String   @default("done")
+  manager       Manager  @relation(fields: [managerId], references: [id])
+}
+
+model Dealer {
+  id           String                       @id @default(cuid())
+  name         String
+  username     String
+  password     String
+  mob          String
+  data         Json                         @default("{}")
+  tokens       Int
+  createdAt    DateTime                     @default(now())
+  isActive     Boolean                      @default(true)
+  parId        String
+  manager      Manager                      @relation(fields: [parId], references: [id])
+  genTokens    DealerTransactions[]
+  dpfHistories DpfHistory[]
+  DealerTokens MangerToDealerTransactions[]
+}
+
+model DealerTransactions {
+  id        String          @id @default(cuid())
+  versionId String
+  dealerId  String
+  token     Int
+  hwid      String
+  key       String
+  createdAt DateTime        @default(now())
+  user      Dealer          @relation(fields: [dealerId], references: [id])
+  version   SoftwareVersion @relation(fields: [versionId], references: [id])
+  isUpdate  Boolean         @default(false)
+}
+
+model DpfHistory {
+  id        String   @id @default(cuid())
+  dealerId  String
+  token     Int      @default(0)
+  createdAt DateTime @default(now())
+  vin       String
+  password  String
+  dealer    Dealer   @relation(fields: [dealerId], references: [id])
+}
