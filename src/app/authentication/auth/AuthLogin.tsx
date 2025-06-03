@@ -32,6 +32,7 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
 
   const signIn = async () => {
     const response = await verifyUser(name, password);
+    console.log(response)
 
     if(response?.success){
       router.push('/')
